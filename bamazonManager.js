@@ -29,7 +29,7 @@ function homeManager() {
                 break;
             case "Add to Inventory": addStock();
                 break;
-            case "Add New Product": console.log("d"); backToStart();
+            case "Add New Product": newProduct();
                 break;
             case "Exit": connection.end();
                 break;
@@ -43,7 +43,7 @@ homeManager()
 
 // define function to see all products in stock
 function viewProducts() {
-    connection.query('SELECT item_id, product_name, price, stock_quantity from products WHERE stock_quantity > 0', function (error, results, fields) {
+    connection.query('SELECT * from products WHERE stock_quantity > 0', function (error, results, fields) {
         if (error) throw error;
         console.table("Products in stock:", results)
         homeManager();
@@ -84,7 +84,37 @@ function addStock() {
     })
 }
 
-// 
+// add a new product -- insert
+function newProduct() {
+    inquirer.prompt([
+        {
+            message: "What is the product name?",
+            name: "product_name"
+        },
+        {
+            message: "Which department does this product belong to?",
+            name: "department_name",
+            type: "list",
+            choices: ["Books", "Clothing", "Electronics", "Grocery", "Home", "Music", "Outdoor", "Pets", "Shoes"]
+        },
+        {
+            message: "What is the price per unit?",
+            name: "price"
+        },
+        {
+            message: "How many units are being stocked?",
+            name: "stock_quantity"
+        }
+    ]).then(function (input) {
+        connection.query(`INSERT INTO products(product_name,department_name,price,stock_quantity) VALUES ("${input.product_name}","${input.department_name}",${input.price},${input.stock_quantity})`, function (error, results) {
+            if (error) throw error;
+            console.table("new product added")
+            //console.log("result: ", results)
+            homeManager();
+        })
+
+    })
+}
 
 // Ask the user if they want to run the app again or quit
 function backToStart() {
