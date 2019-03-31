@@ -13,7 +13,9 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
+// define function to pull up home menu
 function homeManager() {
+    // ask the user to chose from a list of actions
     inquirer.prompt([
         {
             type: "list",
@@ -22,6 +24,7 @@ function homeManager() {
             name: "command"
         }
     ]).then(function (answers) {
+        // call function based on selected action
         switch (answers.command) {
             case "View Products for Sale": viewProducts();
                 break;
@@ -33,13 +36,12 @@ function homeManager() {
                 break;
             case "Exit": connection.end();
                 break;
-            default: console.log("how did you get here")
+            default: console.log("how did you get here");
         }
     })
 };
 
-// start call stack
-homeManager()
+
 
 // define function to see all products in stock
 function viewProducts() {
@@ -94,13 +96,15 @@ function addStock() {
     })
 }
 
-// add a new product -- insert
+// function to add a new product
 function newProduct() {
     // define the choices array for a later question
     var deptArray = [];
+    // query database for existing departments
     connection.query(`SELECT department_name FROM departments ORDER BY department_name ASC`, function (error, results) {
         if (error) throw error;
         for (var i = 0; i < results.length; i++) {
+            // push existing departments into the array
             deptArray.push(results[i].department_name);
         }
         // ask questions about the new products
@@ -113,6 +117,7 @@ function newProduct() {
                 message: "Which department does this product belong to?",
                 name: "department_name",
                 type: "list",
+                // use the array from before as the choices in this question
                 choices: deptArray
             },
             {
@@ -136,19 +141,5 @@ function newProduct() {
     })
 }
 
-// Ask the user if they want to run the app again or quit
-function backToStart() {
-    inquirer.prompt([
-        {
-            type: "confirm",
-            message: "Would you like to make another action?",
-            name: "continue"
-        }
-    ]).then(function (answer) {
-        if (answer.continue) {
-            homeManager()
-        } else {
-            connection.end()
-        }
-    })
-}
+// start call stack
+homeManager()

@@ -56,7 +56,6 @@ function orderPrompt() {
                 purchaseMade(difference, answers, price, productName)
             } else {
                 console.log("Sorry. We don't have enough stock for this purchase.")
-                console.log("Would you like to place a different order?")
                 // ask the user if they want to continue
                 backToStart()
             }
@@ -77,15 +76,13 @@ function purchaseMade(num, answers, cost, item) {
         let productSales = results[0].product_sales;
         // store a calculation of adding the order total to the historic product sales for that item.
         let updatedSales = productSales + total;
-        // console.log("product sales: ", productSales)
-        // console.log("update value: ", updatedSales)
-
         // update database with the new stock_quantity and updated product_sales for ordered item
         connection.query(`UPDATE products SET stock_quantity=${num}, product_sales = ${updatedSales} WHERE item_id = ${answers.item_id}`, function (error, results) {
             if (error) throw error;
             console.log("stock updated")
-            // receipt object.quantity * price
+            // order confirmation
             console.log(`Thanks for spending $${total} with us. Here are your ${answers.quantity} ${item}(s).`)
+            // ask user if they want to continue
             let asyncBackToStart = backToStart()
         });
     })

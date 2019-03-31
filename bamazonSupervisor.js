@@ -35,8 +35,6 @@ function homeSupervisor() {
     })
 };
 
-// call stack
-homeSupervisor()
 
 function viewDeptSales() {
     connection.query(`SELECT a.department_id, a.department_name, a.over_head_costs, sum(b.product_sales) as product_sales, (sum(b.product_sales)-a.over_head_costs) as total_profit
@@ -100,3 +98,7 @@ function showDepartments() {
         // return deptArray;
     })
 }
+
+
+// call stack
+homeSupervisor()
