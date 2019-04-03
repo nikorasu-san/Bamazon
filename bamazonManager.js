@@ -86,7 +86,7 @@ function viewLow() {
 
 // define function to add inventory for an item
 function addStock() {
-    // ask questions
+    // ask questions about the new product
     inquirer.prompt([
         {
             message: colors.yellow("Which item id do you want to restock?"),
@@ -97,28 +97,37 @@ function addStock() {
             name: "add"
         }
     ]).then(function (answers) {
-        // initialize stock variable
-        let stock = 0;
-        // query database to get current item quantity
-        connection.query(`SELECT stock_quantity FROM products WHERE item_id=${answers.item_id}`, function (error, firstResult) {
-            if (!firstResult.length) {
-                // if no results, let user know and send back to main menu
-                console.log(colors.bold(`This item id is not in the database.`));
-                menuManager();
-            } else {
-                // add current stock to user input
-                stock = parseInt(firstResult[0].stock_quantity);
-                newStock = stock + parseInt(answers.add)
-                // push updated stock count to products table in database
-                connection.query(`UPDATE products SET stock_quantity = ${newStock} WHERE item_id = ${answers.item_id}`, function (error, results, fields) {
-                    if (error) throw error;
-                    console.log(colors.yellow.bold("Restock complete"))
-                    // send user back to home screen
+        if (answers.item_id.trim() === "") {
+            console.log(colors.red.bold("Sorry. The item id appeared to be blank. Please try this action again."));
+            // return user to home menu
+            menuManager();
+        } else if (answers.add.trim() === "") {
+            console.log(colors.red.bold("Sorry. The stock addition appeared to be blank. Please try this action again."));
+            // return user to home menu
+            menuManager();
+        } else {
+            // initialize stock variable
+            let stock = 0;
+            // query database to get current item quantity
+            connection.query(`SELECT stock_quantity FROM products WHERE item_id=${answers.item_id}`, function (error, firstResult) {
+                if (!firstResult.length) {
+                    // if no results, let user know and send back to main menu
+                    console.log(colors.bold(`This item id is not in the database.`));
                     menuManager();
-                })
-            }
-        })
-
+                } else {
+                    // add current stock to user input
+                    stock = parseInt(firstResult[0].stock_quantity);
+                    newStock = stock + parseInt(answers.add)
+                    // push updated stock count to products table in database
+                    connection.query(`UPDATE products SET stock_quantity = ${newStock} WHERE item_id = ${answers.item_id}`, function (error, results, fields) {
+                        if (error) throw error;
+                        console.log(colors.yellow.bold("Restock complete"))
+                        // send user back to home screen
+                        menuManager();
+                    })
+                }
+            })
+        }
     })
 }
 
@@ -155,13 +164,20 @@ function newProduct() {
                 name: "stock_quantity"
             }
         ]).then(function (input) {
-            // add the new product to the products table
-            connection.query(`INSERT INTO products(product_name,department_name,price,stock_quantity) VALUES ("${input.product_name}","${input.department_name}",${input.price},${input.stock_quantity})`, function (error, results) {
-                if (error) throw error;
-                console.log(colors.green("The new product was added"))
-                // send user back to home screen
+            // check if any information is blank
+            if (input.product_name.trim() === "" || input.price.trim() === "" || input.stock_quantity.trim() === "") {
+                console.log(colors.red.bold("Sorry. One of the new product details appeared to be blank. Please try this action again."));
+                // return user to home menu
                 menuManager();
-            })
+            } else {
+                // add the new product to the products table
+                connection.query(`INSERT INTO products(product_name,department_name,price,stock_quantity) VALUES ("${input.product_name}","${input.department_name}",${input.price},${input.stock_quantity})`, function (error, results) {
+                    if (error) throw error;
+                    console.log(colors.green("The new product was added"));
+                    // send user back to home screen
+                    menuManager();
+                })
+            }
 
         })
     })
@@ -169,6 +185,6 @@ function newProduct() {
 
 
 // show welcome
-console.log(colors.rainbow(banner))
+console.log(colors.rainbow(banner));
 // start app workflow after the title banner appears
-menuManager()
+menuManager();
