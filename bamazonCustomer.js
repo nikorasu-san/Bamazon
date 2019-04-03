@@ -5,7 +5,7 @@ const cTable = require('console.table');
 const figlet = require('figlet');
 const colors = require('colors');
 
-
+// update the connection details below if you are running this locally
 var connection = mysql.createConnection({
     host: 'localhost',
     port: 8889,
