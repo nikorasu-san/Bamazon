@@ -39,7 +39,7 @@ function menuManager() {
         {
             type: "list",
             message: "What would you like to do?",
-            choices: [colors.green.inverse.bold("View Products for Sale"), colors.red.inverse.bold("View Low Inventory"), colors.yellow.inverse.bold("Add to Inventory"), colors.blue.inverse.bold("Add New Product"), colors.bold("Exit")],
+            choices: [colors.green.inverse.bold("View Products for Sale"), colors.magenta.inverse.bold("View Low Inventory"), colors.yellow.inverse.bold("Add to Inventory"), colors.blue.inverse.bold("Add New Product"), colors.bold("Exit")],
             name: "command"
         }
     ]).then(function (answers) {
@@ -47,7 +47,7 @@ function menuManager() {
         switch (answers.command) {
             case colors.green.inverse.bold("View Products for Sale"): viewProducts();
                 break;
-            case colors.red.inverse.bold("View Low Inventory"): viewLow();
+            case colors.magenta.inverse.bold("View Low Inventory"): viewLow();
                 break;
             case colors.yellow.inverse.bold("Add to Inventory"): addStock();
                 break;
@@ -78,7 +78,7 @@ function viewLow() {
     // query products table for items with less than 5 units
     connection.query('SELECT item_id, product_name, stock_quantity from products WHERE stock_quantity < 5', function (error, results, fields) {
         if (error) throw error;
-        console.table(colors.red.bold("Products with less than 5 in stock:"), results)
+        console.table(colors.magenta.bold("Products with less than 5 in stock:"), results)
         // send user back to home screen
         menuManager();
     });
