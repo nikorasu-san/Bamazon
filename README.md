@@ -9,16 +9,17 @@ The customer will be able to make purchases based on limited data in the databas
 This app was build with Node.js and using a mySQL database. If you plan to run this app locally, please note the sql files for setting up the database and that the connection details for each javascript file should be updated.
 
 ## Instructions
-Video Demo: https://drive.google.com/file/d/13oUnMeLLLaMz7nyOQCQA0kV5R_rmYiYM/view?usp=sharing
+#### Video Demo: 
+https://drive.google.com/file/d/13oUnMeLLLaMz7nyOQCQA0kV5R_rmYiYM/view?usp=sharing
 
-For Customers:
+#### For Customers:
 1. Run bamazonCustomer.js in your terminal.
 2. Information about the items currently in stock will display.
 3. Following the data are 2 prompts asking you for the item_id and the quantity for your purchase, respectively
 4. Next the app will display a confirmation or error message for your purchase.
 5. Finally, the app will ask you if you want to make another purchase. "n" or "no" will exit the program.
 
-For Managers:
+#### For Managers:
 1. Run bamazonManager.js in your terminal.
 2. The app will display a main menu of 5 options.
     * "View Products for Sale" - Displays product data for items in stock.
@@ -28,7 +29,7 @@ For Managers:
     * "Exit" - Will stop the program.
 3. All actions except exit should return the user to the main menu.
 
-For Supervisors:
+#### For Supervisors:
 1. Run bamazonSupervisor.js in your terminal.
 2. The app will display a main menu of 3 options.
     * "View Product Sales by Department" - Displays sales data for any department that has had a product stocked.
