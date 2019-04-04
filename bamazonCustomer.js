@@ -59,35 +59,46 @@ function orderPrompt() {
             name: "quantity"
         }
     ]).then(function (answers) {
-        // query database for data on this item id
-        connection.query(`SELECT stock_quantity, product_name, price from products WHERE item_id = ${answers.item_id}`, function (error, results) {
-            if (error) throw error;
-            // check if there are any results
-            if (!results.length) {
-                // if no, message user and ask if they want to continue
-                console.log(colors.bold(`The item id is not in our database.`));
-                backToStart();
-            } else {
-                // define variables from query data 
-                let inStock = results[0].stock_quantity;
-                let price = results[0].price;
-                let productName = results[0].product_name;
-                // define what the new stock would be after purchase
-                let difference = inStock - answers.quantity
-                // verify that the "new stock" value would be above zero, before making purchase
-                if (difference > 0) {
-                    // console.log(`You can buy ${answers.quantity} ${results[0].product_name}(s)`)
-                    // process the purchase
-                    purchaseMade(difference, answers, price, productName)
+        // validate that the user didn't provide a blank item_id
+        if (answers.item_id.trim() === "") {
+            console.log(colors.red.bold("Sorry. The item id appeared to be blank. Please try making another purchase."));
+            // revisit the order prompts
+            orderPrompt();
+            // validate that the user didn't provide a blank quantity   
+        } else if (answers.quantity.trim() === "") {
+            console.log(colors.red.bold("Sorry. The quantity appeared to be blank. Please try making a new purchase."));
+            // revisit the order prompts
+            orderPrompt();
+        } else {
+            // query database for data on this item id
+            connection.query(`SELECT stock_quantity, product_name, price from products WHERE item_id = ${answers.item_id}`, function (error, results) {
+                if (error) throw error;
+                // check if there are any results
+                if (!results.length) {
+                    // if no, message user and ask if they want to continue
+                    console.log(colors.bold(`The item id is not in our database.`));
+                    backToStart();
                 } else {
-                    console.log(colors.bold("Sorry. We don't have enough stock for this purchase."))
-                    // ask the user if they want to continue
-                    backToStart()
+                    // define variables from query data 
+                    let inStock = results[0].stock_quantity;
+                    let price = results[0].price;
+                    let productName = results[0].product_name;
+                    // define what the new stock would be after purchase
+                    let difference = inStock - answers.quantity
+                    // verify that the "new stock" value would be above zero, before making purchase
+                    if (difference > 0) {
+                        // console.log(`You can buy ${answers.quantity} ${results[0].product_name}(s)`)
+                        // process the purchase
+                        purchaseMade(difference, answers, price, productName)
+                    } else {
+                        console.log(colors.bold("Sorry. We don't have enough stock for this purchase."))
+                        // ask the user if they want to continue
+                        backToStart()
+                    }
                 }
-            }
 
-        });
-
+            });
+        }
     })
 }
 
