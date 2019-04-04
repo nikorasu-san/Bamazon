@@ -9,6 +9,8 @@ The customer will be able to make purchases based on limited data in the databas
 This app was build with Node.js and using a mySQL database. If you plan to run this app locally, please note the sql files for setting up the database and that the connection details for each javascript file should be updated.
 
 ## Instructions
+Video Demo: https://drive.google.com/file/d/13oUnMeLLLaMz7nyOQCQA0kV5R_rmYiYM/view?usp=sharing
+
 For Customers:
 1. Run bamazonCustomer.js in your terminal.
 2. Information about the items currently in stock will display.
